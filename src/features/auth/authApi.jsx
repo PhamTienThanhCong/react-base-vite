@@ -8,7 +8,7 @@ export const loginAction = createAsyncThunk("auth/login", async (payload, thunkA
 });
 
 export const getUserData = createAsyncThunk("auth/get-me", async (payload, thunkAPI) => {
-  const url = "/auth/me";
+  const url = "/auth/current-user";
   let res = await SendRequest(url, payload, thunkAPI, "GET");
   return res;
 });

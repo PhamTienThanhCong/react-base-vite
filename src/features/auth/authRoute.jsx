@@ -8,7 +8,7 @@ function AuthRoute() {
   const location = useLocation();
 
   if (loading) {
-    return <div>Loading...</div>; // Or a loading spinner
+    return <div>Loading...</div>;
   }
 
   return isAuthenticated ? <Outlet /> : <Navigate to="/login" state={location} />;

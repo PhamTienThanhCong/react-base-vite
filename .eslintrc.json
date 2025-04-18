@@ -1,35 +1,42 @@
 {
+  "root": true,
+  "parser": "babel-eslint", // 👈 dùng babel để parse js/jsx
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
   "extends": [
     "eslint:recommended",
-    "react-app",
-    "plugin:react/jsx-runtime",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": [
+    "react",
+    "react-hooks",
+    "jsx-a11y",
     "prettier"
   ],
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": { "project": true, "tsconfigRootDir": "./" },
-  "plugins": ["@typescript-eslint"],
-  "root": true,
-  "ignorePatterns": ["dist"],
-  "rules": {
-    "@typescript-eslint/consistent-type-imports": [
-      2,
-      { "fixStyle": "separate-type-imports" }
-    ],
-    "@typescript-eslint/no-restricted-imports": [
-      2,
-      {
-        "paths": [
-          {
-            "name": "react-redux",
-            "importNames": ["useSelector", "useStore", "useDispatch"],
-            "message": "Please use pre-typed versions from `src/app/hooks.ts` instead."
-          }
-        ]
-      }
-    ]
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   },
-  "overrides": [
-    { "files": ["*.{c,m,}{t,j}s", "*.{t,j}sx"] },
-    { "files": ["*{test,spec}.{t,j}s?(x)"], "env": { "jest": true } }
-  ]
+  "ignorePatterns": [
+    "dist",
+    "node_modules"
+  ],
+  "rules": {
+    "prettier/prettier": "error",
+    "react/prop-types": "off", // nếu bạn không dùng PropTypes
+    "no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "react/react-in-jsx-scope": "off" // với React 17+
+  }
 }

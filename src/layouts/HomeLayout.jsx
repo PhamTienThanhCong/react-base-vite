@@ -16,11 +16,16 @@ import {
   UserOutlined
 } from "@ant-design/icons";
 import "./BaseLayout.scss";
+import { APP_NAME, APP_SHORT_NAME } from "@/constants/mainConstants";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { logOut } from "@/features/auth/authSlice";
 
 const { Header, Sider, Content, Footer } = Layout;
-const { SubMenu } = Menu;
 
 const BaseLayout = ({ children }) => {
+  const dispatch = useAppDispatch();
+  const currentUser = useAppSelector((state) => state.auth.currentUser);
+
   const [collapsed, setCollapsed] = useState(false);
   const [breadcrumbItems] = useState(["Home", "Dashboard"]);
 
@@ -54,7 +59,7 @@ const BaseLayout = ({ children }) => {
         Cài đặt
       </Menu.Item>
       <Menu.Divider />
-      <Menu.Item key="logout" icon={<LogoutOutlined />}>
+      <Menu.Item key="logout" onClick={() => dispatch(logOut())} icon={<LogoutOutlined />}>
         Đăng xuất
       </Menu.Item>
     </Menu>
@@ -70,7 +75,7 @@ const BaseLayout = ({ children }) => {
       <List
         itemLayout="horizontal"
         dataSource={notifications}
-        renderItem={item => (
+        renderItem={(item) => (
           <Menu.Item key={item.id} className="notification-item">
             <div className="notification-content">
               <div className="notification-title">{item.title}</div>
@@ -90,30 +95,25 @@ const BaseLayout = ({ children }) => {
   return (
     <Layout style={{ minHeight: "100vh" }}>
       {/* Sidebar */}
-      <Sider 
-        trigger={null} 
-        collapsible 
-        collapsed={collapsed} 
-        width={250} 
-        breakpoint="lg" 
+      <Sider
+        trigger={null}
+        collapsible
+        collapsed={collapsed}
+        width={250}
+        breakpoint="lg"
         collapsedWidth="80"
         className="custom-sider"
       >
         <div className="logo">
           {collapsed ? (
-            <div className="logo-collapsed">AD</div>
+            <div className="logo-collapsed">{APP_SHORT_NAME}</div>
           ) : (
-            <div className="logo-expanded">Admin Pro</div>
+            <div className="logo-expanded">{APP_NAME}</div>
           )}
         </div>
 
-        <Menu 
-          theme="dark" 
-          mode="inline" 
-          defaultSelectedKeys={["1"]}
-          className="custom-menu"
-        >
-          {menuItems.map(item => (
+        <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]} className="custom-menu">
+          {menuItems.map((item) => (
             <Menu.Item key={item.key} icon={item.icon}>
               {item.label}
             </Menu.Item>
@@ -130,15 +130,15 @@ const BaseLayout = ({ children }) => {
               {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
                 className: "trigger",
                 onClick: toggleCollapsed,
-                style: { fontSize: '20px' }
+                style: { fontSize: "20px" }
               })}
             </div>
-            
+
             <div className="header-right">
-              <Dropdown 
-                overlay={notificationMenu} 
-                placement="bottomRight" 
-                trigger={['click']}
+              <Dropdown
+                overlay={notificationMenu}
+                placement="bottomRight"
+                trigger={["click"]}
                 overlayClassName="notification-dropdown"
               >
                 <div className="notification-trigger">
@@ -147,18 +147,20 @@ const BaseLayout = ({ children }) => {
                   </Badge>
                 </div>
               </Dropdown>
-              
+
               <Dropdown overlay={userMenu} placement="bottomRight">
                 <div className="user-profile">
-                  <Avatar 
-                    size="default" 
-                    icon={<UserOutlined />} 
-                    className="user-avatar"
-                  />
+                  {currentUser?.avatar_url ? (
+                    <Avatar size="default" src={currentUser?.avatar_url} className="user-avatar" />
+                  ) : (
+                    <Avatar size="default" icon={<UserOutlined />} className="user-avatar" />
+                  )}
                   {!collapsed && (
                     <div className="user-info">
-                      <span className="user-name">Admin</span>
-                      <span className="user-role">Quản trị viên</span>
+                      <span className="user-name">{currentUser?.name}</span>
+                      <span className="user-role">
+                        {currentUser?.role === "admin" ? "Quản trị viên" : "Người dùng"}
+                      </span>
                     </div>
                   )}
                 </div>
@@ -179,14 +181,12 @@ const BaseLayout = ({ children }) => {
           </div>
 
           {/* Main content */}
-          <div className="content-container">
-            {children}
-          </div>
+          <div className="content-container">{children}</div>
         </Content>
 
         {/* Footer */}
         <Footer className="site-layout-footer">
-          Admin Pro ©{new Date().getFullYear()}
+          {APP_NAME} ©{new Date().getFullYear()}
         </Footer>
       </Layout>
     </Layout>

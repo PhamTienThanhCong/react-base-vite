@@ -1,5 +1,4 @@
 import { BASE_URL_API } from "@/constants/mainConstants";
-import { notification } from "antd";
 import axios from "axios";
 import { trackPromise } from "react-promise-tracker";
 
@@ -10,7 +9,7 @@ function refactorURL(url) {
 
 const SendRequest = async (url, payload, thunkAPI, method = "post") => {
   url = refactorURL(url);
-  const token = localStorage.getItem("token") || "";
+  const token = localStorage.getItem("access_token") || "";
   const instance = axios.create({
     baseURL: BASE_URL_API,
     timeout: 30000,
@@ -41,10 +40,10 @@ const SendRequest = async (url, payload, thunkAPI, method = "post") => {
           successMessage = "Dữ liệu đã được xóa thành công.";
         }
         if (successMessage) {
-          notification.success({
-            message: "Thành công",
-            description: successMessage
-          });
+          // notification.success({
+          //   message: "Thành công",
+          //   description: successMessage
+          // });
         }
       }
       if (response.data) {
@@ -69,10 +68,10 @@ const SendRequest = async (url, payload, thunkAPI, method = "post") => {
             } else if (method.toLocaleLowerCase() === "delete") {
               errorMessage = "Có lỗi xảy ra khi xóa dữ liệu. Vui lòng thử lại.";
             }
-            notification.error({
-              message: "Lỗi",
-              description: errorMessage
-            });
+            // notification.error({
+            //   message: "Lỗi",
+            //   description: errorMessage
+            // });
           }
         }
       }

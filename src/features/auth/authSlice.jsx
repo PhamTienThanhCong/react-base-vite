@@ -15,24 +15,23 @@ export const authSlice = createSlice({
       state.users = {};
       state.isLogin = false;
       // remove token in local storage
-      localStorage.removeItem("token");
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
       // redirect to login page
       window.location.href = "/login";
     }
   },
   extraReducers: (builder) => {
-    builder.addCase(loginAction.fulfilled, (state, action) => {
-      localStorage.setItem("token", action.payload.access_token);
-    });
     builder.addCase(getUserData.fulfilled, (state, action) => {
-      state.currentUser = action.payload;
+      state.currentUser = action.payload.user;
       state.isLogin = true;
     });
     builder.addCase(getUserData.rejected, (state) => {
       state.currentUser = {};
       state.isLogin = false;
       // remove token in local storage
-      localStorage.removeItem("token");
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
     });
   }
 });
